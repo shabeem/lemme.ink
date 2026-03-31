@@ -3,7 +3,7 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { useEffect, useRef, useState, useCallback } from 'react';
 
-const TELEGRAM_BOT_LINK = 'https://t.me/lemmeinkbot';
+const TELEGRAM_LINK = 'https://t.me/lemmeink';
 
 const STUDIO_LOCATIONS = [
   { name: 'Los Angeles', lat: 34.0522, lon: -118.2437 },
@@ -113,7 +113,7 @@ export default function BookingForm({ isOpen, onClose }: Props) {
 
       if (replyMethod === 'telegram') {
         setTimeout(() => {
-          const url = `${TELEGRAM_BOT_LINK}?start=${requestId}`;
+          const url = TELEGRAM_LINK;
           window.open(url, '_blank', 'noopener,noreferrer');
         }, 500);
         return;
