@@ -80,6 +80,43 @@ export async function POST(req: Request) {
     }
 
     console.log('[booking] sent:', data?.id);
+
+    // Send Telegram notification
+    const tgToken = process.env.TELEGRAM_BOT_TOKEN;
+    const tgChatId = process.env.TELEGRAM_CHAT_ID;
+    if (tgToken && tgChatId) {
+      const clientTg = telegram && telegram.trim() !== '@' ? telegram.trim() : null;
+      const tgText = [
+        `🖋 *New Booking Request* — ${requestId}`,
+        ``,
+        `*Name:* ${name}`,
+        `*Phone:* ${phone || '—'}`,
+        `*Email:* ${email || '—'}`,
+        clientTg ? `*Telegram:* [${clientTg}](https://t.me/${clientTg.replace('@', '')})` : null,
+        `*Reply via:* ${replyMethod}`,
+        ``,
+        `*Location:* ${location || '—'}`,
+        `*Placement:* ${placement || '—'}`,
+        `*Size:* ${size || '—'}`,
+        `*Budget:* ${budget || '—'}`,
+        `*Best days:* ${days.length ? days.join(', ') : '—'}`,
+        ``,
+        `*Idea:* ${idea}`,
+        attachments.length ? `*Files:* ${attachments.map(a => a.filename).join(', ')}` : null,
+      ].filter(Boolean).join('\n');
+
+      await fetch(`https://api.telegram.org/bot${tgToken}/sendMessage`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          chat_id: tgChatId,
+          text: tgText,
+          parse_mode: 'Markdown',
+          disable_web_page_preview: true,
+        }),
+      });
+    }
+
     return NextResponse.json({ ok: true });
   } catch (err) {
     console.error('[booking]', err);
