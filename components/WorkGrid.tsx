@@ -52,7 +52,7 @@ function ArtistCard({ item, index }: { item: WorkItem; index: number }) {
 
 export default function WorkGrid() {
   return (
-    <section id="work" className="px-8 md:px-12 py-20 md:py-28">
+    <section id="work" className="px-4 md:px-12 py-20 md:py-28">
       {/* Header */}
       <div className="flex items-baseline justify-between mb-14">
         <div>

@@ -9,7 +9,7 @@ const fadeUp = {
 
 export default function LocationSection({ onBookClick }: { onBookClick?: () => void }) {
   return (
-    <section id="location" className="px-8 md:px-12 py-20 md:py-28 border-t border-[#1c1c1c]">
+    <section id="location" className="px-4 md:px-12 py-20 md:py-28 border-t border-[#1c1c1c]">
       <div className="grid md:grid-cols-2 gap-12 md:gap-20 items-start">
 
         {/* Left — address + book + parking */}
@@ -140,7 +140,7 @@ export default function LocationSection({ onBookClick }: { onBookClick?: () => v
           viewport={{ once: true }}
           transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1], delay: 0.15 }}
           className="w-full overflow-hidden"
-          style={{ aspectRatio: '4/5' }}
+          style={{ aspectRatio: '4/3' }}
         >
           <iframe
             title="Studio location"

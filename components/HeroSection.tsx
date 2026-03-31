@@ -54,7 +54,7 @@ export default function HeroSection({ ready = false, onBookClick }: { ready?: bo
         variants={container}
         initial="hidden"
         animate={ready ? "visible" : "hidden"}
-        className="relative z-10 flex-1 flex flex-col items-center justify-center px-8 md:px-12 pt-24 pb-10 text-center gap-8"
+        className="relative z-10 flex-1 flex flex-col items-center justify-center px-4 md:px-12 pt-24 pb-24 md:pb-10 text-center gap-8"
       >
         {/* Brand name */}
         <motion.div variants={fadeUp} className="w-full">

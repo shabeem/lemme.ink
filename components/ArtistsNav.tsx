@@ -143,10 +143,10 @@ function CategoryRow({
                 </div>
               </div>
 
-              {/* Preview image — hover expands */}
+              {/* Preview image — hover expands, hidden on mobile */}
               <motion.div
                 style={{ x: imgX, y: imgY }}
-                className="relative overflow-hidden flex-shrink-0 group/img"
+                className="relative overflow-hidden flex-shrink-0 group/img hidden md:block"
                 whileHover={{ width: 280 }}
                 initial={{ width: 140 }}
                 animate={{ width: 140 }}
@@ -207,7 +207,7 @@ export default function ArtistsNav() {
     <section
       ref={sectionRef}
       id="artists"
-      className="px-8 md:px-12 py-20 md:py-28"
+      className="px-4 md:px-12 py-20 md:py-28"
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
     >

@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 
 export default function PhilosophySection() {
   return (
-    <section id="philosophy" className="px-8 md:px-12 py-24 md:py-36">
+    <section id="philosophy" className="px-4 md:px-12 py-24 md:py-36">
       {/* Section label */}
       <motion.p
         initial={{ opacity: 0, y: 16 }}
@@ -68,7 +68,7 @@ export default function PhilosophySection() {
               <rect x="34" y="10" width="5" height="22" fill="white" />
             </svg>
             <p
-              className="text-[15px] text-[#3f3f46] md:text-right whitespace-nowrap"
+              className="text-[15px] text-[#3f3f46] md:text-right"
               style={{ fontFamily: 'var(--font-geist-sans)' }}
             >
               Currently booking in Los Angeles. Guest spots in Seattle, San Francisco, Austin, Chicago — waitlist open.

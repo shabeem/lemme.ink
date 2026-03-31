@@ -66,7 +66,7 @@ export default function Nav({ onBookClick }: { onBookClick?: () => void }) {
         style={{ opacity: borderOpacity }}
       />
 
-      <div className="flex items-center justify-between px-8 md:px-12 py-5">
+      <div className="flex items-center justify-between px-4 md:px-12 py-5">
         {/* Logo */}
         <a
           href="#"
