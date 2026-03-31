@@ -35,19 +35,7 @@ export default function HeroSection({ ready = false, onBookClick }: { ready?: bo
       </div>
 
       {/* Breathing light — top */}
-      <motion.div
-        aria-hidden="true"
-        suppressHydrationWarning
-        className="absolute top-0 left-0 right-0 pointer-events-none"
-        style={{
-          height: '65%',
-          zIndex: 9999,
-          background: 'radial-gradient(ellipse 80% 60% at 50% 0%, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.06) 40%, transparent 100%)',
-        }}
-        initial={{ opacity: 0.2 }}
-        animate={{ opacity: [0.2, 1, 0.2] }}
-        transition={{ duration: 3.5, repeat: Infinity, ease: 'easeInOut' }}
-      />
+      <div aria-hidden="true" className="breathing-light" />
 
       {/* Logo watermark — bottom right */}
       <div className="absolute bottom-8 right-8 md:bottom-10 md:right-12 z-10 pointer-events-none" aria-hidden="true">
