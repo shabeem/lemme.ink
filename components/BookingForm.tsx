@@ -3,8 +3,6 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { useEffect, useRef, useState, useCallback } from 'react';
 
-const TELEGRAM_LINK = 'https://t.me/lemmeink';
-
 const STUDIO_LOCATIONS = [
   { name: 'Los Angeles', lat: 34.0522, lon: -118.2437 },
   { name: 'San Francisco', lat: 37.7749, lon: -122.4194 },
@@ -38,10 +36,8 @@ interface Props {
 
 export default function BookingForm({ isOpen, onClose }: Props) {
   const formRef = useRef<HTMLFormElement>(null);
-  const [replyMethod, setReplyMethod] = useState<'email' | 'telegram' | ''>('');
   const [selectedDays, setSelectedDays] = useState<string[]>([]);
   const [fileNames, setFileNames] = useState<string[]>([]);
-  const [telegramUsername, setTelegramUsername] = useState('@');
   const [locationHint, setLocationHint] = useState('');
   const [status, setStatus] = useState<{ type: 'error' | 'success'; msg: string } | null>(null);
   const [submitting, setSubmitting] = useState(false);
@@ -91,10 +87,6 @@ export default function BookingForm({ isOpen, onClose }: Props) {
     e.preventDefault();
     setStatus(null);
 
-    if (!replyMethod) { setStatus({ type: 'error', msg: "Please select how you'd like me to reply." }); return; }
-    if (replyMethod === 'telegram' && telegramUsername.trim() === '@') {
-      setStatus({ type: 'error', msg: 'Please enter your Telegram username.' }); return;
-    }
     if (!formRef.current?.reportValidity()) { setStatus({ type: 'error', msg: 'Please complete all required fields.' }); return; }
 
     const requestId = generateRequestId();
@@ -102,7 +94,6 @@ export default function BookingForm({ isOpen, onClose }: Props) {
     formData.append('requestId', requestId);
     formData.append('submittedAt', new Date().toISOString());
     formData.append('source', window.location.href);
-    formData.append('preferredReplyMethod', replyMethod);
     selectedDays.forEach((d) => formData.append('bestDays[]', d));
 
     setSubmitting(true);
@@ -111,19 +102,9 @@ export default function BookingForm({ isOpen, onClose }: Props) {
       if (!res.ok) throw new Error('Submission failed. Please try again.');
       setStatus({ type: 'success', msg: 'Request sent successfully.' });
 
-      if (replyMethod === 'telegram') {
-        setTimeout(() => {
-          const url = TELEGRAM_LINK;
-          window.open(url, '_blank', 'noopener,noreferrer');
-        }, 500);
-        return;
-      }
-
       formRef.current?.reset();
-      setTelegramUsername('@');
       setSelectedDays([]);
       setFileNames([]);
-      setReplyMethod('');
       setLocationHint('');
       detectLocation();
     } catch (err: unknown) {
@@ -254,40 +235,6 @@ export default function BookingForm({ isOpen, onClose }: Props) {
                   </label>
                 </Field>
 
-                {/* Reply method */}
-                <Field label="How should I reply?" required>
-                  <div className="grid grid-cols-2 gap-3 mt-1">
-                    {(['email', 'telegram'] as const).map((method) => (
-                      <button key={method} type="button" onClick={() => setReplyMethod(method)}
-                        className="text-left px-4 py-4 border transition-all duration-200"
-                        style={{
-                          fontFamily: 'var(--font-geist-sans)',
-                          borderColor: replyMethod === method ? '#c9a96e' : 'rgba(245,240,235,0.08)',
-                          background: replyMethod === method ? 'rgba(201,169,110,0.06)' : 'transparent',
-                        }}>
-                        <div className="text-xs tracking-[0.2em] uppercase mb-1"
-                          style={{ color: replyMethod === method ? '#c9a96e' : '#f5f0eb' }}>
-                          {method === 'email' ? 'Email' : 'Telegram'}
-                        </div>
-                        <div className="text-[11px] text-[#71717a]">
-                          {method === 'email' ? 'Traditional reply' : 'Fastest communication'}
-                        </div>
-                      </button>
-                    ))}
-                  </div>
-                </Field>
-
-                {/* Telegram username */}
-                {replyMethod === 'telegram' && (
-                  <Field label="Telegram username" required>
-                    <input
-                      value={telegramUsername}
-                      onChange={(e) => setTelegramUsername(e.target.value || '@')}
-                      onKeyDown={(e) => { if (telegramUsername.length <= 1 && e.key === 'Backspace') e.preventDefault(); }}
-                      className={inputCls} placeholder="@username" style={inputStyle}
-                    />
-                  </Field>
-                )}
 
                 {/* Status */}
                 {status && (
