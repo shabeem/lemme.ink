@@ -35,11 +35,11 @@ export default function HeroSection({ ready = false, onBookClick }: { ready?: bo
       </div>
 
       {/* Breathing light — top */}
-      <div className="absolute top-0 left-0 right-0 z-[1] pointer-events-none" aria-hidden="true"
+      <div className="absolute top-0 left-0 right-0 z-20 pointer-events-none" aria-hidden="true"
         style={{
-          height: '55%',
-          background: 'radial-gradient(ellipse 70% 50% at 50% 0%, rgba(255,255,255,0.13) 0%, transparent 100%)',
-          animation: 'breathe 4s ease-in-out infinite',
+          height: '60%',
+          background: 'radial-gradient(ellipse 80% 60% at 50% 0%, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.06) 40%, transparent 100%)',
+          animation: 'breathe 3.5s ease-in-out infinite',
         }}
       />
 
