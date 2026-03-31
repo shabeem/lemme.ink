@@ -1,0 +1,7 @@
+{
+  "tool_name": "Bash",
+  "tool_input_preview": "{\"command\":\"cp \\\"/Users/kali108/Downloads/detailsmatter.PNG\\\" \\\"/Users/kali108/Desktop/untitled folder/test/luxury-tattoo/public/detailsmatter.png\\\"\",\"description\":\"Copy image to public folder\"}",
+  "error": "Exit code 1\ncp: /Users/kali108/Downloads/detailsmatter.PNG: No such file or directory",
+  "timestamp": "2026-03-30T10:17:42.702Z",
+  "retry_count": 1
+}
