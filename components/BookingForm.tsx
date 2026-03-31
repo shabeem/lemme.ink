@@ -240,7 +240,17 @@ export default function BookingForm({ isOpen, onClose }: Props) {
                       {fileNames.length ? fileNames.join(', ') : 'Click to upload images'}
                     </span>
                     <input type="file" multiple accept="image/*,.pdf,.heic,.heif" name="referenceFiles" className="hidden"
-                      onChange={(e) => setFileNames([...e.target.files!].map((f) => f.name))} />
+                      onChange={(e) => {
+                        const files = [...e.target.files!];
+                        const oversized = files.filter(f => f.size > 3 * 1024 * 1024);
+                        if (oversized.length > 0) {
+                          alert(`Some files are too large (max 3MB each): ${oversized.map(f => f.name).join(', ')}`);
+                          e.target.value = '';
+                          setFileNames([]);
+                          return;
+                        }
+                        setFileNames(files.map(f => f.name));
+                      }} />
                   </label>
                 </Field>
 
