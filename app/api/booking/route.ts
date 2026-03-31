@@ -65,7 +65,7 @@ export async function POST(req: Request) {
       </div>
     `;
 
-    await resend.emails.send({
+    const { data, error } = await resend.emails.send({
       from: 'Lemme Ink <noreply@lemme.ink>',
       to: TO,
       replyTo: email,
@@ -74,6 +74,12 @@ export async function POST(req: Request) {
       attachments,
     });
 
+    if (error) {
+      console.error('[booking] resend error:', JSON.stringify(error));
+      return NextResponse.json({ error }, { status: 500 });
+    }
+
+    console.log('[booking] sent:', data?.id);
     return NextResponse.json({ ok: true });
   } catch (err) {
     console.error('[booking]', err);
