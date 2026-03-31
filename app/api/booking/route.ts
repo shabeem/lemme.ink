@@ -66,7 +66,7 @@ export async function POST(req: Request) {
     `;
 
     await resend.emails.send({
-      from: 'Lemme Ink <onboarding@resend.dev>',
+      from: 'Lemme Ink <noreply@lemme.ink>',
       to: TO,
       replyTo: email,
       subject: `[${requestId}] New request from ${name}`,
