@@ -38,7 +38,7 @@ export default function HeroSection({ ready = false, onBookClick }: { ready?: bo
       <div aria-hidden="true" className="breathing-light" />
 
       {/* Logo watermark — bottom right */}
-      <div className="absolute bottom-8 right-8 md:bottom-10 md:right-12 z-10 pointer-events-none" aria-hidden="true">
+      <div className="hidden md:block absolute bottom-10 right-12 z-10 pointer-events-none" aria-hidden="true">
         <svg width="52" height="38" viewBox="0 0 72 52" fill="none">
           <rect x="0"  y="4"  width="5" height="28" fill="white" opacity="0.12" />
           <rect x="7"  y="0"  width="5" height="32" fill="white" opacity="0.12" />
