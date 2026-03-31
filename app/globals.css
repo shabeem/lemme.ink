@@ -72,6 +72,11 @@ body::after {
   border-radius: 2px;
 }
 
+@keyframes breathe {
+  0%, 100% { opacity: 0.7; }
+  50% { opacity: 1; }
+}
+
 /* Marquee animation */
 @keyframes marquee {
   0% { transform: translateX(0); }

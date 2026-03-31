@@ -34,6 +34,15 @@ export default function HeroSection({ ready = false, onBookClick }: { ready?: bo
         <ParticleField />
       </div>
 
+      {/* Breathing light — top */}
+      <div className="absolute top-0 left-0 right-0 z-[1] pointer-events-none" aria-hidden="true"
+        style={{
+          height: '55%',
+          background: 'radial-gradient(ellipse 70% 50% at 50% 0%, rgba(255,255,255,0.13) 0%, transparent 100%)',
+          animation: 'breathe 4s ease-in-out infinite',
+        }}
+      />
+
       {/* Logo watermark — bottom right */}
       <div className="absolute bottom-8 right-8 md:bottom-10 md:right-12 z-10 pointer-events-none" aria-hidden="true">
         <svg width="52" height="38" viewBox="0 0 72 52" fill="none">
