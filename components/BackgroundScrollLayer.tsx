@@ -86,7 +86,9 @@ export default function BackgroundScrollLayer() {
     const dh = ih * scale;
     const contentOffsetX = 35 * scale; // correct for subject being right of frame center
     const dx = Math.round((cw - dw) / 2 - contentOffsetX);
-    const dy = Math.round((ch - dh) / 2);
+    // Shift image up so circle lands at ~90% of screen height (border of sections 1 & 2)
+    const contentOffsetY = ch * 0.25;
+    const dy = Math.round((ch - dh) / 2 - contentOffsetY);
 
     ctx.fillStyle = '#0a0a0a';
     ctx.fillRect(0, 0, cw, ch);
