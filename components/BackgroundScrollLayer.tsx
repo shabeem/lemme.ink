@@ -27,17 +27,30 @@ export default function BackgroundScrollLayer() {
     if (!canvas) return;
 
     const dpr = window.devicePixelRatio || 1;
-    canvas.width = window.innerWidth * dpr;
-    canvas.height = window.innerHeight * dpr;
-
-    const handleResize = () => {
+    const setCanvasSize = () => {
       canvas.width = window.innerWidth * dpr;
       canvas.height = window.innerHeight * dpr;
     };
 
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    setCanvasSize();
+
+    window.addEventListener('resize', setCanvasSize);
+    return () => window.removeEventListener('resize', setCanvasSize);
   }, []);
+
+  // Render initial frame when ready
+  useEffect(() => {
+    const renderInitialFrame = async () => {
+      if (!canvasRef.current || !isReady) return;
+      try {
+        const frame = await getFrame(0);
+        renderFrame(canvasRef.current, frame);
+      } catch (error) {
+        console.error('Failed to render initial frame:', error);
+      }
+    };
+    renderInitialFrame();
+  }, [isReady, getFrame]);
 
   return (
     <div
