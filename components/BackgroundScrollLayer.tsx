@@ -33,7 +33,7 @@ export default function BackgroundScrollLayer() {
         if (loaded === TOTAL_FRAMES) {
           drawFrame(TOTAL_FRAMES - 1);
           // Fade in the canvas
-          canvas.animate([{ opacity: 0 }, { opacity: 0.45 }], {
+          canvas.animate([{ opacity: 0 }, { opacity: 0.28 }], {
             duration: 5000,
             easing: 'ease-in-out',
             fill: 'forwards',
@@ -87,11 +87,12 @@ export default function BackgroundScrollLayer() {
     // X: center on subject (circle is 35px right of frame center)
     const contentOffsetX = 35 * scale;
     const dx = Math.round((cw - dw) / 2 - contentOffsetX);
-    // Y: place circle just above the top of the viewport (-5% of screen height)
-    // Circle sits at y=465 in the 720px source frame
+    // Y: place circle at ~55% from top, clamped so image always fills full canvas
     const circleSourceY = 465;
-    const targetY = 0.38 * ch; // circle visible ~38% from top on load
-    const dy = Math.round(targetY - circleSourceY * scale);
+    const targetY = 0.55 * ch;
+    const idealDy = Math.round(targetY - circleSourceY * scale);
+    // Clamp: never let image leave a gap at top or bottom
+    const dy = Math.max(Math.round(ch - dh), Math.min(0, idealDy));
 
     ctx.fillStyle = '#0a0a0a';
     ctx.fillRect(0, 0, cw, ch);
