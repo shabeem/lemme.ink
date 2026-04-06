@@ -33,7 +33,7 @@ html {
 }
 
 body {
-  background: var(--background);
+  background: transparent;
   color: var(--foreground);
   font-family: var(--font-geist-sans), sans-serif;
   -webkit-font-smoothing: antialiased;

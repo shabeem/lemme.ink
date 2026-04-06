@@ -4,7 +4,7 @@ export default function BackgroundScrollLayer() {
   return (
     <div
       className="fixed inset-0 z-0 pointer-events-none"
-      style={{ opacity: 0.3 }}
+      style={{ opacity: 0.6 }}
       aria-hidden="true"
     >
       {/* eslint-disable-next-line @next/next/no-img-element */}
