@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import CursorGlow from '@/components/CursorGlow';
+import BackgroundScrollLayer from '@/components/BackgroundScrollLayer';
 import Nav from '@/components/Nav';
 import HeroSection from '@/components/HeroSection';
 import MarqueeStrip from '@/components/MarqueeStrip';
@@ -21,6 +22,7 @@ export default function Home() {
       <BookingForm isOpen={bookingOpen} onClose={() => setBookingOpen(false)} />
 
       <main className="relative min-h-[100dvh] bg-[#111010]">
+        <BackgroundScrollLayer />
         <CursorGlow />
         <div className="relative z-10">
           <Nav onBookClick={() => setBookingOpen(true)} />
