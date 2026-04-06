@@ -30,8 +30,8 @@ export default function BackgroundScrollLayer() {
       img.src = FRAME_PATH(i);
       img.onload = () => {
         loaded++;
-        if (loaded === 1) {
-          drawFrame(0);
+        if (loaded === TOTAL_FRAMES) {
+          drawFrame(TOTAL_FRAMES - 1);
           // Fade in the canvas
           canvas.animate([{ opacity: 0 }, { opacity: 0.45 }], {
             duration: 5000,
@@ -47,7 +47,7 @@ export default function BackgroundScrollLayer() {
       const scrollTop = window.scrollY;
       const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
       const progress = maxScroll > 0 ? scrollTop / maxScroll : 0;
-      const idx = Math.min(TOTAL_FRAMES - 1, Math.floor(progress * TOTAL_FRAMES));
+      const idx = Math.min(TOTAL_FRAMES - 1, Math.floor((1 - progress) * TOTAL_FRAMES));
 
       if (idx !== currentFrame.current) {
         currentFrame.current = idx;
