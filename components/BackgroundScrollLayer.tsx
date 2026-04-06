@@ -49,6 +49,13 @@ export default function BackgroundScrollLayer() {
       const progress = maxScroll > 0 ? scrollTop / maxScroll : 0;
       const idx = Math.min(TOTAL_FRAMES - 1, Math.floor((1 - progress) * TOTAL_FRAMES));
 
+      // Fade out over the last 30% of scroll → fully gone at 100%
+      const fadeStart = 0.7;
+      const opacity = progress >= fadeStart
+        ? 0.20 * (1 - (progress - fadeStart) / (1 - fadeStart))
+        : 0.20;
+      canvas.style.opacity = String(opacity);
+
       if (idx !== currentFrame.current) {
         currentFrame.current = idx;
         if (rafId.current) cancelAnimationFrame(rafId.current);
@@ -112,6 +119,7 @@ export default function BackgroundScrollLayer() {
         opacity: 0,
         pointerEvents: 'none',
         display: 'block',
+        transition: 'opacity 5s ease-out',
       }}
       aria-hidden="true"
     />
