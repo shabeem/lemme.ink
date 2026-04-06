@@ -90,7 +90,7 @@ export default function BackgroundScrollLayer() {
     // Y: place circle just above the top of the viewport (-5% of screen height)
     // Circle sits at y=465 in the 720px source frame
     const circleSourceY = 465;
-    const targetY = -0.05 * ch;
+    const targetY = 0.38 * ch; // circle visible ~38% from top on load
     const dy = Math.round(targetY - circleSourceY * scale);
 
     ctx.fillStyle = '#0a0a0a';
