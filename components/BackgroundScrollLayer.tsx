@@ -12,6 +12,7 @@ export default function BackgroundScrollLayer() {
         src="/parallax-bg.gif"
         alt=""
         className="absolute inset-0 w-full h-full object-cover"
+        style={{ transform: 'rotate(90deg)', transformOrigin: 'center center' }}
       />
       <div
         className="absolute inset-0 pointer-events-none"
