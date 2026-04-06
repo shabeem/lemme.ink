@@ -14,7 +14,6 @@ export default function BackgroundScrollLayer() {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    // Size canvas to fill viewport
     const dpr = window.devicePixelRatio || 1;
     const resize = () => {
       canvas.width = window.innerWidth * dpr;
@@ -24,19 +23,26 @@ export default function BackgroundScrollLayer() {
     resize();
     window.addEventListener('resize', resize);
 
-    // Preload all frames
+    // Preload all frames — show first frame + fade in on load
     let loaded = 0;
     for (let i = 1; i <= TOTAL_FRAMES; i++) {
       const img = new Image();
       img.src = FRAME_PATH(i);
       img.onload = () => {
         loaded++;
-        if (loaded === 1) drawFrame(0); // show first frame immediately
+        if (loaded === 1) {
+          drawFrame(0);
+          // Fade in the canvas
+          canvas.animate([{ opacity: 0 }, { opacity: 0.45 }], {
+            duration: 1800,
+            easing: 'ease-in-out',
+            fill: 'forwards',
+          });
+        }
       };
       frames.current[i - 1] = img;
     }
 
-    // Scroll → frame index
     const onScroll = () => {
       const scrollTop = window.scrollY;
       const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
@@ -72,12 +78,12 @@ export default function BackgroundScrollLayer() {
     const iw = img.naturalWidth;
     const ih = img.naturalHeight;
 
-    // Cover: fill canvas keeping aspect ratio
+    // Cover + center
     const scale = Math.max(cw / iw, ch / ih);
     const dw = iw * scale;
     const dh = ih * scale;
-    const dx = (cw - dw) / 2;
-    const dy = (ch - dh) / 2;
+    const dx = Math.round((cw - dw) / 2);
+    const dy = Math.round((ch - dh) / 2);
 
     ctx.fillStyle = '#0a0a0a';
     ctx.fillRect(0, 0, cw, ch);
@@ -89,11 +95,12 @@ export default function BackgroundScrollLayer() {
       ref={canvasRef}
       style={{
         position: 'fixed',
-        inset: 0,
-        width: '100%',
-        height: '100%',
+        top: 0,
+        left: 0,
+        width: '100vw',
+        height: '100vh',
         zIndex: 0,
-        opacity: 0.45,
+        opacity: 0,
         pointerEvents: 'none',
         display: 'block',
       }}
