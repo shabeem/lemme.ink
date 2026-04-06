@@ -33,7 +33,7 @@ export default function BackgroundScrollLayer() {
         if (loaded === TOTAL_FRAMES) {
           drawFrame(TOTAL_FRAMES - 1);
           // Fade in the canvas
-          canvas.animate([{ opacity: 0 }, { opacity: 0.28 }], {
+          canvas.animate([{ opacity: 0 }, { opacity: 0.20 }], {
             duration: 5000,
             easing: 'ease-in-out',
             fill: 'forwards',
