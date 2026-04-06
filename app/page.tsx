@@ -21,7 +21,7 @@ export default function Home() {
     <>
       <BookingForm isOpen={bookingOpen} onClose={() => setBookingOpen(false)} />
 
-      <main className="relative min-h-[100dvh] bg-[#111010]">
+      <main className="relative min-h-[100dvh]">
         <BackgroundScrollLayer />
         <CursorGlow />
         <div className="relative z-10">

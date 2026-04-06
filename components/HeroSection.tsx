@@ -29,7 +29,7 @@ export default function HeroSection({ ready = false, onBookClick }: { ready?: bo
   return (
     <section className="relative min-h-[100dvh] flex flex-col overflow-hidden">
       {/* Background */}
-      <div className="absolute inset-0 z-0 bg-[#111010]" aria-hidden="true" />
+      <div className="absolute inset-0 z-0" aria-hidden="true" />
       <div className="absolute inset-0 z-0">
         <ParticleField />
       </div>
