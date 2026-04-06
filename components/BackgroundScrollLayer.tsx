@@ -56,6 +56,7 @@ export default function BackgroundScrollLayer() {
     <div
       ref={containerRef}
       className="fixed inset-0 z-0 pointer-events-none will-change-transform"
+      style={{ opacity: 0.3 }}
       aria-hidden="true"
     >
       <canvas
