@@ -58,11 +58,6 @@ export default function Nav({ onBookClick }: { onBookClick?: () => void }) {
         background: 'transparent',
       }}
     >
-      {/* Border-bottom that appears on scroll */}
-      <motion.div
-        className="absolute bottom-0 left-0 right-0 h-px bg-[#1c1c1c]"
-        style={{ opacity: borderOpacity }}
-      />
 
       <div className="flex items-center justify-between px-4 md:px-12 py-5">
         {/* Logo */}
