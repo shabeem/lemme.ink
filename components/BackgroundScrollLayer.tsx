@@ -34,7 +34,7 @@ export default function BackgroundScrollLayer() {
           drawFrame(0);
           // Fade in the canvas
           canvas.animate([{ opacity: 0 }, { opacity: 0.45 }], {
-            duration: 1800,
+            duration: 3000,
             easing: 'ease-in-out',
             fill: 'forwards',
           });
@@ -78,11 +78,14 @@ export default function BackgroundScrollLayer() {
     const iw = img.naturalWidth;
     const ih = img.naturalHeight;
 
-    // Cover + center
+    // Cover + center on visual content
+    // Circle in source frame is ~35px right of frame center (670 vs 640 in 1280px wide)
+    // Shift draw position left by that scaled amount to center visually
     const scale = Math.max(cw / iw, ch / ih);
     const dw = iw * scale;
     const dh = ih * scale;
-    const dx = Math.round((cw - dw) / 2);
+    const contentOffsetX = 35 * scale; // correct for subject being right of frame center
+    const dx = Math.round((cw - dw) / 2 - contentOffsetX);
     const dy = Math.round((ch - dh) / 2);
 
     ctx.fillStyle = '#0a0a0a';
