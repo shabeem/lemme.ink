@@ -196,8 +196,8 @@ export default function BookingForm({ isOpen, onClose }: Props) {
                   <div className="flex flex-wrap gap-2 mt-1">
                     {DAYS.map((day) => (
                       <button key={day} type="button"
-                        onTouchStart={() => toggleDay(day)}
-                        onClick={(e) => { if (e.detail !== 0) toggleDay(day); }}
+                        onTouchEnd={(e) => { e.preventDefault(); toggleDay(day); }}
+                        onClick={() => toggleDay(day)}
                         className="px-3 py-1.5 text-[11px] tracking-[0.15em] uppercase transition-all duration-150 border"
                         style={{
                           fontFamily: 'var(--font-geist-sans)',
