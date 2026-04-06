@@ -228,9 +228,16 @@ export default function BookingForm({ isOpen, onClose }: Props) {
                     <input type="file" multiple accept="image/*,.pdf,.heic,.heif" name="referenceFiles" className="hidden"
                       onChange={(e) => {
                         const files = [...e.target.files!];
+                        const oversized = files.filter(f => f.size > 10 * 1024 * 1024);
+                        if (oversized.length) {
+                          alert(`Each image must be under 10MB. These files are too large: ${oversized.map(f => f.name).join(', ')}`);
+                          e.target.value = '';
+                          setFileNames([]);
+                          return;
+                        }
                         const totalSize = files.reduce((sum, f) => sum + f.size, 0);
-                        if (totalSize > 4 * 1024 * 1024) {
-                          alert(`Total file size must be under 4MB. Please upload fewer or smaller files.`);
+                        if (totalSize > 40 * 1024 * 1024) {
+                          alert(`Total upload size must be under 40MB. Please upload fewer files.`);
                           e.target.value = '';
                           setFileNames([]);
                           return;
