@@ -55,9 +55,7 @@ export default function Nav({ onBookClick }: { onBookClick?: () => void }) {
       transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
       className="fixed top-0 left-0 right-0 z-50"
       style={{
-        background: 'rgba(17, 16, 16, 0.92)',
-        backdropFilter: 'blur(12px)',
-        WebkitBackdropFilter: 'blur(12px)',
+        background: 'transparent',
       }}
     >
       {/* Border-bottom that appears on scroll */}
