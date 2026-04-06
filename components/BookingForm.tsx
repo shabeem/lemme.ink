@@ -195,13 +195,18 @@ export default function BookingForm({ isOpen, onClose }: Props) {
                 <Field label="Best days">
                   <div className="flex flex-wrap gap-2 mt-1">
                     {DAYS.map((day) => (
-                      <button key={day} type="button" onClick={() => toggleDay(day)}
-                        className="px-3 py-1.5 text-[11px] tracking-[0.15em] uppercase transition-all duration-200 border"
+                      <button key={day} type="button"
+                        onTouchStart={() => toggleDay(day)}
+                        onClick={(e) => { if (e.detail !== 0) toggleDay(day); }}
+                        className="px-3 py-1.5 text-[11px] tracking-[0.15em] uppercase transition-all duration-150 border"
                         style={{
                           fontFamily: 'var(--font-geist-sans)',
                           borderColor: selectedDays.includes(day) ? '#c9a96e' : 'rgba(245,240,235,0.08)',
                           color: selectedDays.includes(day) ? '#111010' : '#71717a',
                           background: selectedDays.includes(day) ? '#c9a96e' : 'transparent',
+                          touchAction: 'manipulation',
+                          WebkitTapHighlightColor: 'transparent',
+                          userSelect: 'none',
                         }}>
                         {day}
                       </button>
