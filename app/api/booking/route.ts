@@ -2,10 +2,16 @@ import { Resend } from 'resend';
 import { NextResponse } from 'next/server';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
-const TO = process.env.RESEND_TO_EMAIL!;
+const TO = process.env.RESEND_TO_EMAIL;
+const FROM = process.env.RESEND_FROM_EMAIL || 'Lemme Ink <noreply@lemme.ink>';
 
 export async function POST(req: Request) {
   try {
+    if (!TO || !process.env.RESEND_API_KEY) {
+      console.error('[booking] missing RESEND_TO_EMAIL or RESEND_API_KEY');
+      return NextResponse.json({ error: 'Email service not configured' }, { status: 500 });
+    }
+
     const formData = await req.formData();
 
     const name        = formData.get('fullName')           as string;
@@ -21,11 +27,18 @@ export async function POST(req: Request) {
     const requestId   = formData.get('requestId')          as string;
     const days        = formData.getAll('bestDays[]')      as string[];
 
-    // Build file attachments
+    // Build file attachments (capped to stay under Resend's ~40MB raw / ~30MB after base64)
+    const MAX_ATTACHMENT_BYTES = 25 * 1024 * 1024;
     const fileEntries = formData.getAll('referenceFiles') as File[];
     const attachments: { filename: string; content: Buffer }[] = [];
+    let totalBytes = 0;
     for (const file of fileEntries) {
       if (file && file.size > 0) {
+        totalBytes += file.size;
+        if (totalBytes > MAX_ATTACHMENT_BYTES) {
+          console.error('[booking] attachments exceed cap:', totalBytes);
+          return NextResponse.json({ error: 'Attachments too large' }, { status: 413 });
+        }
         const buf = await file.arrayBuffer();
         attachments.push({ filename: file.name, content: Buffer.from(buf) });
       }
@@ -66,7 +79,7 @@ export async function POST(req: Request) {
     `;
 
     const { data, error } = await resend.emails.send({
-      from: 'Lemme Ink <noreply@lemme.ink>',
+      from: FROM,
       to: TO,
       replyTo: email,
       subject: `[${requestId}] New request from ${name}`,
@@ -76,7 +89,7 @@ export async function POST(req: Request) {
 
     if (error) {
       console.error('[booking] resend error:', JSON.stringify(error));
-      return NextResponse.json({ error }, { status: 500 });
+      return NextResponse.json({ error: 'Failed to send' }, { status: 500 });
     }
 
     console.log('[booking] sent:', data?.id);
