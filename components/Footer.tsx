@@ -1,7 +1,6 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import MagneticButton from './MagneticButton';
 
 const navLinks = [
   { label: 'Work', href: '#work' },

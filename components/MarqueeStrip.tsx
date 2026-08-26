@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 
 const MARQUEE_TEXT =
   'LEMME INK · WEST HOLLYWOOD CA · FINE LINE · SINGLE NEEDLE · DETAILS MATTER · BY ALI · CURRENTLY BOOKING · LOS ANGELES · GUEST SPOTS · SEATTLE · SAN FRANCISCO · AUSTIN · CHICAGO · WAITLIST OPEN · ';

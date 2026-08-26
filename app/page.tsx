@@ -11,7 +11,6 @@ import WorkGrid from '@/components/WorkGrid';
 import PhilosophySection from '@/components/PhilosophySection';
 import Footer from '@/components/Footer';
 import BookingForm from '@/components/BookingForm';
-import VideoSection from '@/components/VideoSection';
 import LocationSection from '@/components/LocationSection';
 
 export default function Home() {

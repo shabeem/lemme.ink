@@ -1,7 +1,6 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
-import { useMotionValue, useSpring, motion, useTransform } from 'framer-motion';
+import { motion } from 'framer-motion';
 
 const links = [
   { label: 'Artists', href: '#artists' },
@@ -36,18 +35,6 @@ function NavLink({ label, href, accent }: { label: string; href: string; accent?
 }
 
 export default function Nav({ onBookClick }: { onBookClick?: () => void }) {
-  const scrollY = useMotionValue(0);
-  const borderOpacity = useSpring(
-    useTransform(scrollY, [0, 60], [0, 1]),
-    { stiffness: 200, damping: 30 }
-  );
-
-  useEffect(() => {
-    const handleScroll = () => scrollY.set(window.scrollY);
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [scrollY]);
-
   return (
     <motion.header
       initial={{ opacity: 0, y: -8 }}

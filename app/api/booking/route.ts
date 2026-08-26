@@ -1,7 +1,6 @@
 import { Resend } from 'resend';
 import { NextResponse } from 'next/server';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
 const TO = process.env.RESEND_TO_EMAIL;
 const FROM = process.env.RESEND_FROM_EMAIL || 'Lemme Ink <noreply@lemme.ink>';
 
@@ -11,6 +10,10 @@ export async function POST(req: Request) {
       console.error('[booking] missing RESEND_TO_EMAIL or RESEND_API_KEY');
       return NextResponse.json({ error: 'Email service not configured' }, { status: 500 });
     }
+
+    // Lazy init: newer Resend versions throw if constructed without an API key,
+    // which would break builds in environments without env vars.
+    const resend = new Resend(process.env.RESEND_API_KEY);
 
     const formData = await req.formData();
 
@@ -118,16 +121,21 @@ export async function POST(req: Request) {
         attachments.length ? `*Files:* ${attachments.map(a => a.filename).join(', ')}` : null,
       ].filter(Boolean).join('\n');
 
-      await fetch(`https://api.telegram.org/bot${tgToken}/sendMessage`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          chat_id: tgChatId,
-          text: tgText,
-          parse_mode: 'Markdown',
-          disable_web_page_preview: true,
-        }),
-      });
+      try {
+        await fetch(`https://api.telegram.org/bot${tgToken}/sendMessage`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            chat_id: tgChatId,
+            text: tgText,
+            parse_mode: 'Markdown',
+            disable_web_page_preview: true,
+          }),
+        });
+      } catch (tgErr) {
+        // Booking email already sent - a Telegram hiccup must not fail the request.
+        console.error('[booking] telegram notify failed:', tgErr);
+      }
     }
 
     return NextResponse.json({ ok: true });

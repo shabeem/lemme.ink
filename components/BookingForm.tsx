@@ -34,6 +34,58 @@ interface Props {
   onClose: () => void;
 }
 
+// Vercel serverless functions reject request bodies over ~4.5MB, so we
+// compress images in the browser before upload and cap the total payload.
+const MAX_TOTAL_UPLOAD_BYTES = 3.8 * 1024 * 1024;
+const COMPRESS_MAX_DIMENSION = 2000;
+const COMPRESS_QUALITY = 0.82;
+
+async function compressImageFile(file: File): Promise<File> {
+  const looksLikeImage = file.type.startsWith('image/') || /\.(heic|heif)$/i.test(file.name);
+  if (!looksLikeImage) return file;
+
+  try {
+    let source: CanvasImageSource;
+    let width: number;
+    let height: number;
+
+    try {
+      const bitmap = await createImageBitmap(file, { imageOrientation: 'from-image' });
+      source = bitmap; width = bitmap.width; height = bitmap.height;
+    } catch {
+      const img = await new Promise<HTMLImageElement>((resolve, reject) => {
+        const url = URL.createObjectURL(file);
+        const el = new Image();
+        el.onload = () => { URL.revokeObjectURL(url); resolve(el); };
+        el.onerror = () => { URL.revokeObjectURL(url); reject(new Error('decode failed')); };
+        el.src = url;
+      });
+      source = img; width = img.naturalWidth; height = img.naturalHeight;
+    }
+
+    if (!width || !height) return file;
+
+    const scale = Math.min(1, COMPRESS_MAX_DIMENSION / Math.max(width, height));
+    const canvas = document.createElement('canvas');
+    canvas.width = Math.max(1, Math.round(width * scale));
+    canvas.height = Math.max(1, Math.round(height * scale));
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return file;
+    ctx.drawImage(source, 0, 0, canvas.width, canvas.height);
+
+    const blob = await new Promise<Blob | null>((resolve) =>
+      canvas.toBlob(resolve, 'image/jpeg', COMPRESS_QUALITY)
+    );
+    if (!blob || blob.size === 0) return file;
+    if (blob.size >= file.size) return file;
+
+    const newName = file.name.replace(/\.[^.]+$/, '') + '.jpg';
+    return new File([blob], newName, { type: 'image/jpeg' });
+  } catch {
+    return file;
+  }
+}
+
 export default function BookingForm({ isOpen, onClose }: Props) {
   const formRef = useRef<HTMLFormElement>(null);
   const [selectedDays, setSelectedDays] = useState<string[]>([]);
@@ -98,8 +150,30 @@ export default function BookingForm({ isOpen, onClose }: Props) {
 
     setSubmitting(true);
     try {
+      // Compress reference images so the request stays under Vercel's 4.5MB body limit
+      const fileInput = formRef.current!.querySelector<HTMLInputElement>('input[name="referenceFiles"]');
+      const rawFiles = fileInput?.files ? [...fileInput.files].filter((f) => f.size > 0) : [];
+      formData.delete('referenceFiles');
+
+      const processed = await Promise.all(rawFiles.map(compressImageFile));
+      const totalBytes = processed.reduce((sum, f) => sum + f.size, 0);
+      if (totalBytes > MAX_TOTAL_UPLOAD_BYTES) {
+        throw new Error('Attachments are too large. Please attach fewer or smaller files - or send them after we reply.');
+      }
+      processed.forEach((f) => formData.append('referenceFiles', f));
+
       const res = await fetch('/api/booking', { method: 'POST', body: formData });
-      if (!res.ok) throw new Error('Submission failed. Please try again.');
+      if (!res.ok) {
+        if (res.status === 413) {
+          throw new Error('Attachments are too large. Please attach fewer or smaller files.');
+        }
+        let serverMsg = '';
+        try {
+          const j = (await res.json()) as { error?: string };
+          serverMsg = j?.error ?? '';
+        } catch { /* non-JSON response */ }
+        throw new Error(serverMsg ? serverMsg + '. Please try again.' : 'Submission failed. Please try again.');
+      }
       setStatus({ type: 'success', msg: 'Request sent successfully.' });
 
       formRef.current?.reset();
@@ -164,7 +238,7 @@ export default function BookingForm({ isOpen, onClose }: Props) {
                   New Tattoo Request
                 </h2>
                 <p className="text-[#71717a] text-sm leading-relaxed" style={{ fontFamily: 'var(--font-geist-sans)' }}>
-                  Tell me about your idea, placement, size, and attach reference images. I'll reply via your preferred contact method.
+                  Tell me about your idea, placement, size, and attach reference images. I&apos;ll reply via your preferred contact method.
                 </p>
               </div>
 
@@ -228,16 +302,10 @@ export default function BookingForm({ isOpen, onClose }: Props) {
                     <input type="file" multiple accept="image/*,.pdf,.heic,.heif" name="referenceFiles" className="hidden"
                       onChange={(e) => {
                         const files = [...e.target.files!];
-                        const oversized = files.filter(f => f.size > 10 * 1024 * 1024);
+                        // Images are compressed automatically before upload; sanity cap only
+                        const oversized = files.filter(f => f.size > 30 * 1024 * 1024);
                         if (oversized.length) {
-                          alert(`Each image must be under 10MB. These files are too large: ${oversized.map(f => f.name).join(', ')}`);
-                          e.target.value = '';
-                          setFileNames([]);
-                          return;
-                        }
-                        const totalSize = files.reduce((sum, f) => sum + f.size, 0);
-                        if (totalSize > 40 * 1024 * 1024) {
-                          alert(`Total upload size must be under 40MB. Please upload fewer files.`);
+                          alert(`Each file must be under 30MB. These files are too large: ${oversized.map(f => f.name).join(', ')}`);
                           e.target.value = '';
                           setFileNames([]);
                           return;
