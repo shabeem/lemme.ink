@@ -1,12 +1,23 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useSyncExternalStore } from 'react';
 import { useMotionValue, useSpring, motion } from 'framer-motion';
+
+function subscribeToPointer(callback: () => void) {
+  const mq = window.matchMedia('(pointer: coarse)');
+  mq.addEventListener('change', callback);
+  return () => mq.removeEventListener('change', callback);
+}
 
 export default function CursorGlow() {
   const rawX = useMotionValue(-400);
   const rawY = useMotionValue(-400);
-  const [isTouch, setIsTouch] = useState(true); // default hidden until we confirm mouse
+  // Hidden on server and on touch devices; shown only with a fine pointer
+  const isTouch = useSyncExternalStore(
+    subscribeToPointer,
+    () => window.matchMedia('(pointer: coarse)').matches,
+    () => true
+  );
 
   const ringX = useSpring(rawX, { stiffness: 90, damping: 18, mass: 0.8 });
   const ringY = useSpring(rawY, { stiffness: 90, damping: 18, mass: 0.8 });
@@ -14,9 +25,7 @@ export default function CursorGlow() {
   const dotY = useSpring(rawY, { stiffness: 220, damping: 22, mass: 0.5 });
 
   useEffect(() => {
-    // Only show on devices with a fine pointer (mouse/trackpad)
-    if (window.matchMedia('(pointer: coarse)').matches) return;
-    setIsTouch(false);
+    if (isTouch) return;
 
     const onMove = (e: MouseEvent) => {
       rawX.set(e.clientX);
@@ -24,7 +33,7 @@ export default function CursorGlow() {
     };
     window.addEventListener('mousemove', onMove, { passive: true });
     return () => window.removeEventListener('mousemove', onMove);
-  }, [rawX, rawY]);
+  }, [isTouch, rawX, rawY]);
 
   if (isTouch) return null;
 

@@ -3,7 +3,6 @@
 import { useEffect, useRef } from 'react';
 
 interface Dot { worldX: number; worldZ: number; r: number }
-interface Ripple { startT: number }
 
 const CAM_Y    = 320;
 const CAM_BACK = 520;

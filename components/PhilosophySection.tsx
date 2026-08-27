@@ -55,7 +55,7 @@ export default function PhilosophySection() {
               marginLeft: 'auto',
             }}
           >
-            My name is Ali. I'm a self-taught fine line and single needle tattoo artist based in West Hollywood, CA. I've been tattooing since 2022, and I've built my practice around one belief: attention to detail is everything. Before tattooing, I spent eight years in ballet, lived across the world, and became a DJ and producer in Thailand. That journey taught me that the most powerful forms of expression are the ones that take time to perfect.
+            My name is Ali. I&apos;m a self-taught fine line and single needle tattoo artist based in West Hollywood, CA. I&apos;ve been tattooing since 2022, and I&apos;ve built my practice around one belief: attention to detail is everything. Before tattooing, I spent eight years in ballet, lived across the world, and became a DJ and producer in Thailand. That journey taught me that the most powerful forms of expression are the ones that take time to perfect.
           </p>
 
           <div className="md:flex md:flex-col md:items-end mt-6 gap-3">

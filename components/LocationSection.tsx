@@ -81,7 +81,7 @@ export default function LocationSection({ onBookClick }: { onBookClick?: () => v
                 className="text-[13px] text-[#71717a] leading-relaxed"
                 style={{ fontFamily: 'var(--font-geist-sans)' }}
               >
-                Send text <span className="text-[#f5f0eb]">"WH259"</span> to{' '}
+                Send text <span className="text-[#f5f0eb]">&quot;WH259&quot;</span> to{' '}
                 <span className="text-[#f5f0eb]">25023</span>
               </p>
               <a

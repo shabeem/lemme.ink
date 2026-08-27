@@ -1,7 +1,7 @@
 'use client';
 
-import { motion, useAnimate, useInView } from 'framer-motion';
-import { useEffect, useRef } from 'react';
+import { motion, useInView } from 'framer-motion';
+import { useRef } from 'react';
 
 const WORD1 = 'LEMME';
 const WORD2 = 'INK';
@@ -19,7 +19,7 @@ const letterVariants = {
   }),
 };
 
-function Letter({ char, index, total }: { char: string; index: number; total: number }) {
+function Letter({ char, index }: { char: string; index: number; total: number }) {
   return (
     <span className="inline-block overflow-hidden" aria-hidden="true">
       <motion.span
